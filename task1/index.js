@@ -1,4 +1,3 @@
-// eslint-disable-next-line node/no-extraneous-require
 const program = require('commander');
 const { stream_process } = require('./stream_process');
 
