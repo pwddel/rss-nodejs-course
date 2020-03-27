@@ -30,7 +30,7 @@ const input_stream = input => {
   if (input) {
     return fs.createReadStream(path.join(__dirname, `./files/${input}`));
   }
-  console.log('The input file is not present, type string to process.');
+  console.log('The input file is not present, type string to proceed.');
   return process.stdin.on('readable', () => {
     // eslint-disable-next-line no-unused-vars
     let chunk;

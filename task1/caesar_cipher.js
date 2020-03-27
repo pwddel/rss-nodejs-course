@@ -8,9 +8,6 @@ module.exports = {
 };
 
 function caesar(shift, input) {
-  if (!/^-?\d+$/.test(shift)) console.error('Shift is not an integer');
-  if (shift < 0 || shift >= 26) console.error('Shift is out of range');
-
   let output = '';
   const len = input.length;
 
