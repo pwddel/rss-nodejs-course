@@ -19,6 +19,14 @@ app.use('/', (req, res, next) => {
   next();
 });
 
+// eslint-disable-next-line no-unused-vars
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+});
+
 app.use('/users', userRouter);
+
+app.use('/users/:id', userRouter);
 
 module.exports = app;

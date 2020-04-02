@@ -17,6 +17,15 @@ class User {
     const { id, name, login } = user;
     return { id, name, login };
   }
+
+  userProperties() {
+    return {
+      id: this.id,
+      name: this.name,
+      login: this.login,
+      password: this.password
+    };
+  }
 }
 
 module.exports = User;
