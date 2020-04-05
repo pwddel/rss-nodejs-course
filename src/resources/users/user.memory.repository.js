@@ -1,41 +1,42 @@
-let users = [
-  {
-    id: 'd514acc4-a26c-4af0-8ddc-8b21d5090d4f',
-    name: 'USER',
-    login: 'user',
-    password: 'passw@rd'
-  },
-  {
-    id: '1d0ec0c0-7cca-4289-ada7-818d89f21372',
-    name: 'USER',
-    login: 'user',
-    password: 'passw@rd'
-  },
-  {
-    id: '2bf15bcb-1aae-4495-bac0-c0f2530cd723',
-    name: 'USER',
-    login: 'user',
-    password: 'passw@rd'
-  }
-];
+let db = [];
 
-const getAll = async () => {
-  // TODO: mock implementation. should be replaced during task development
-  return users;
+const getAll = () => db;
+
+const addData = data => {
+  db.push(data);
+  /* console.log('DB:', db);*/
 };
 
-const addUser = user => {
-  users.push(user);
+const findData = id => {
+  /* console.log('User.memory findData id:', id);*/
+  return db.find(data => data.id === id);
 };
 
-const updateUsers = newUsers => {
-  console.log('Filtred users:', newUsers);
-  users = [...newUsers];
+const updateData = (id, newData) => {
+  let dbUpdatedData = {};
+  db = [
+    ...db.map(data => {
+      if (data.id === id) {
+        return (dbUpdatedData = {
+          ...data,
+          name: newData.name,
+          login: newData.login,
+          password: newData.password
+        });
+      }
+      return { ...data };
+    })
+  ];
+  return dbUpdatedData;
 };
+
+const deleteData = id => db.filter(data => data.id !== id);
 
 module.exports = {
   getAll,
-  addUser,
-  updateUsers,
-  users
+  addData,
+  updateData,
+  findData,
+  deleteData,
+  db
 };

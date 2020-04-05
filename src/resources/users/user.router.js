@@ -2,58 +2,34 @@ const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
 
-router
-  .route('/')
-  .get(async (req, res) => {
-    const users = await usersService.getAll();
-    // map user fields to exclude secret fields like "password"
-    res.json(users.map(User.toResponse));
-  })
-  .post(async (req, res) => {
-    res.json(usersService.createUser());
-  });
+router.get('/', (req, res) => {
+  const users = usersService.getAll();
+  res.json(users.map(User.toResponse));
+});
 
-router
-  .route('/:id')
-  .all((req, res, next) => {
-    // runs for all HTTP verbs first
-    // think of it as route specific middleware!
-    console.log('Validate ID');
-    next();
-  })
-  // eslint-disable-next-line no-unused-vars
-  .get((req, res, next) => {
-    const userId = req.params.id;
-    const user = usersService.findUser(userId);
+router.post('/', (req, res) => {
+  const user = new User(req.body);
+  usersService.create(User.toDB(user));
+  res.json(User.toResponse(user));
+});
 
-    console.log('User finded:', user);
-    console.log('ID:', req.params.id);
+router.get('/:id', (req, res) => {
+  const user = usersService.findUser(req.params.id);
+  console.log('Route get /:id user:', user);
+  console.log('Route get /:id id:', req.params.id);
+  res.json(User.toResponse(user));
+});
 
-    if (user) {
-      res.json(user);
-    } else {
-      res.json({ message: `User: ${userId} doesn't exist` });
-    }
-    res.json(req.user);
-  })
-  // eslint-disable-next-line no-unused-vars
-  .put((req, res, next) => {
-    const userId = req.params.id;
-    const userBody = req.body;
-    usersService.updateUser(userId, userBody);
+router.put('/:id', (req, res) => {
+  console.log('Route put updated user:', req.body);
+  const updatedUser = usersService.updateUser(req.params.id, req.body);
+  /* console.log('Route put updated user:', updatedUser);*/
+  res.json(User.toResponse(updatedUser));
+});
 
-    res.status(200).send('The user has been updated.');
-  })
-  .post((req, res, next) => {
-    next(new Error('not implemented'));
-  })
-  // eslint-disable-next-line no-unused-vars
-  .delete((req, res, next) => {
-    const userId = req.params.id;
-    console.log('Delete User with id: ', userId);
-    // filter list copy, by excluding user to delete
-    usersService.deleteUser(userId);
-    res.status(204).send('The user has been deleted');
-  });
+router.delete('/:id', (req, res) => {
+  usersService.deleteUser(req.params.id);
+  res.status(204).end();
+});
 
 module.exports = router;
