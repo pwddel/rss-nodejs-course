@@ -1,28 +1,18 @@
 const uuid = require('uuid');
 
-class Board {
-  constructor({
-    id = uuid(),
-    title = 'Title',
-    // eslint-disable-next-line no-unused-vars
-    columns = [
-      {
-        id,
-        // eslint-disable-next-line no-undef
-        order,
-        title
-      }
-    ]
-  } = {}) {
+class Column {
+  constructor({ id = uuid(), title = 'Title', order = 0 } = {}) {
     this.id = id;
     this.title = title;
-    this.columns = [
-      {
-        id: uuid(),
-        order: 0,
-        title: 'Title'
-      }
-    ];
+    this.order = order;
+  }
+}
+
+class Board {
+  constructor({ id = uuid(), title = 'Title', columns = new Column() } = {}) {
+    this.id = id;
+    this.title = title;
+    this.columns = columns;
   }
 
   static toDB(board) {
@@ -30,20 +20,26 @@ class Board {
     const {
       id,
       title,
-      columns: [{ id: boardId, title: columnTitle, order }]
+      columns: [{ id: ColumnId, title: columnTitle, order }]
     } = board;
-    return { id, title, columns: [{ id: boardId, title: columnTitle, order }] };
+    return {
+      id,
+      title,
+      columns: [{ id: ColumnId, title: columnTitle, order }]
+    };
   }
 
   static toResponse(board) {
     if (!board) return {};
     const {
+      id,
       title,
-      columns: [{ title: columnTitle, order }]
+      columns: [{ id: ColumnId, title: columnTitle, order }]
     } = board;
     return {
+      id,
       title,
-      columns: [{ title: columnTitle, order }]
+      columns: [{ id: ColumnId, title: columnTitle, order }]
     };
   }
 }
