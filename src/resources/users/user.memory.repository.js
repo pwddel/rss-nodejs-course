@@ -1,3 +1,5 @@
+const tasksRepo = require('../tasks/task.memory.repository');
+
 let db = [];
 
 const getAll = () => db;
@@ -30,7 +32,12 @@ const updateData = (id, newData) => {
   return dbUpdatedData;
 };
 
-const deleteData = id => db.filter(data => data.id !== id);
+const deleteData = id => {
+  tasksRepo.unassignUser(id);
+  const filtred = db.filter(data => data.id !== id);
+  db = [...filtred];
+  return 'Deleted';
+};
 
 module.exports = {
   getAll,

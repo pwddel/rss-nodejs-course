@@ -1,3 +1,5 @@
+const tasksRepo = require('../tasks/task.memory.repository');
+
 let db = [];
 
 const getAll = () => db;
@@ -30,6 +32,7 @@ const updateData = (id, newData) => {
 };
 
 const deleteData = id => {
+  tasksRepo.deleteData(id);
   const filtred = db.filter(data => data.id !== id);
   console.log('FILTRED', filtred);
   db = [...filtred];

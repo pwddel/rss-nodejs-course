@@ -37,14 +37,16 @@ const input_stream = input => {
     // Use a loop to make sure we read all available data.
     // eslint-disable-next-line no-cond-assign
     while ((chunk = process.stdin.read()) !== null) {
-      console.log('If you finished typing press CTRL-C');
+      console.log('If you finished press CTRL-C');
     }
   });
 };
 
 const output_stream = output => {
   if (output) {
-    return fs.createWriteStream(path.join(__dirname, `./files/${output}`));
+    return fs.createWriteStream(path.join(__dirname, `./files/${output}`), {
+      flags: 'a'
+    });
   }
   console.log('The output  file is not present. Result:');
   return process.stdout;

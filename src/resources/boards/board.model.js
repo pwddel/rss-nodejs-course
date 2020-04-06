@@ -9,7 +9,11 @@ class Column {
 }
 
 class Board {
-  constructor({ id = uuid(), title = 'Title', columns = new Column() } = {}) {
+  constructor({
+    id = uuid(),
+    title = 'Title',
+    columns = [new Column(), new Column()]
+  } = {}) {
     this.id = id;
     this.title = title;
     this.columns = columns;
@@ -17,29 +21,21 @@ class Board {
 
   static toDB(board) {
     if (!board) return {};
-    const {
-      id,
-      title,
-      columns: [{ id: ColumnId, title: columnTitle, order }]
-    } = board;
+    const { id, title, columns } = board;
     return {
       id,
       title,
-      columns: [{ id: ColumnId, title: columnTitle, order }]
+      columns
     };
   }
 
   static toResponse(board) {
     if (!board) return {};
-    const {
-      id,
-      title,
-      columns: [{ id: ColumnId, title: columnTitle, order }]
-    } = board;
+    const { id, title, columns } = board;
     return {
       id,
       title,
-      columns: [{ id: ColumnId, title: columnTitle, order }]
+      columns
     };
   }
 }

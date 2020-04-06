@@ -1,6 +1,9 @@
 const router = require('express').Router();
 const Board = require('./board.model');
 const boardsService = require('./board.service');
+const tasksRouter = require('../../resources/tasks/task.router.js');
+
+router.use('/:boardId/tasks', tasksRouter);
 
 router.get('/', (req, res) => {
   const users = boardsService.getAll();
