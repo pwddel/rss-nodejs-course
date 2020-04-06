@@ -1,4 +1,4 @@
 node_modules
 /.idea/
-/cross-check/
-/____say/
+cross-check
+____say
