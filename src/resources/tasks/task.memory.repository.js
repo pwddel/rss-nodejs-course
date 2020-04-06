@@ -27,7 +27,7 @@ const updateData = (boardId, taskId, newData) => {
 const deleteData = (boardId, taskId) => {
   let filtred = [];
   if (!taskId) {
-    filtred = db.filter(task => task.id !== taskId);
+    filtred = db.filter(task => task.boardId !== boardId);
   } else {
     filtred = db.filter(task => task.id !== taskId && task.boardId !== boardId);
   }
