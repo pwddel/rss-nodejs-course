@@ -21,6 +21,7 @@ const updateData = (boardId, taskId, newData) => {
     return { ...data };
   });
   db = [...newDB];
+  console.log('DB AFTER UPDATED', db);
   return db.find(data => data.id === taskId && data.boardId === boardId);
 };
 
@@ -31,7 +32,7 @@ const deleteData = (boardId, taskId) => {
   } else {
     filtred = db.filter(task => task.id !== taskId && task.boardId !== boardId);
   }
-  console.log('DELETE ID', taskId);
+  /* console.log('DELETE ID', taskId);*/
   db = [...filtred];
 };
 
@@ -46,8 +47,8 @@ const unassignUser = userId => {
 };
 
 const findData = (boardId, taskId) => {
-  console.log('BOARD', boardId);
-  console.log('TASK', taskId);
+  /* console.log('BOARD', boardId);
+  console.log('TASK', taskId);*/
   return db.find(data => data.id === taskId && data.boardId === boardId);
 };
 

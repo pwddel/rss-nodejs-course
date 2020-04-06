@@ -9,7 +9,7 @@ router.get('/', (req, res) => {
 
 router.get('/:taskId', (req, res) => {
   const task = tasksService.findTask(req.params.boardId, req.params.taskId);
-  console.log('TASK', task);
+  /* console.log('TASK', task);*/
   if (!task) res.status(404).send('The task not found');
   res.json(task);
 });
@@ -20,7 +20,7 @@ router.post('/', (req, res) => {
 });
 
 router.put('/:taskId', (req, res) => {
-  const updatedTask = tasksService.create(
+  const updatedTask = tasksService.updateTask(
     req.params.boardId,
     req.params.taskId,
     req.body
