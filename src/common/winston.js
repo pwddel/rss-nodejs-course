@@ -1,5 +1,5 @@
 const { createLogger, transports, format } = require('winston');
-console.log(`${__dirname}/logs/app.log`);
+
 const logger = createLogger({
   exitOnError: false,
   format: format.combine(
@@ -11,7 +11,7 @@ const logger = createLogger({
       level: 'info'
     }),
     new transports.File({
-      level: 'error',
+      level: 'info',
       filename: `${__dirname}/logs/app.log`
     })
   ]
