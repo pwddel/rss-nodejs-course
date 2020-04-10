@@ -1,5 +1,16 @@
 const logger = require('./winston');
-/* const {BAD_REQUEST, getStatusText} = require('http-status-codes');*/
+const { BAD_REQUEST, getStatusText } = require('http-status-codes');
+
+class ValidationError extends Error {
+  constructor() {
+    super();
+    this.statusCode = BAD_REQUEST;
+    this.message = getStatusText(this.statusCode);
+    logger.error(
+      `Validation ERROR - status code:${this.statusCode} Error message:${this.message}`
+    );
+  }
+}
 
 class ErrorHandler extends Error {
   constructor(statusCode, message) {
@@ -11,13 +22,6 @@ class ErrorHandler extends Error {
     );
   }
 }
-
-/*
-class ValidationError extends Error {
-  status = BAD_REQUEST;
-  text = getStatusText(this.status)
-}
-*/
 
 const handleError = (err, res) => {
   const { statusCode, message } = err;
@@ -31,6 +35,6 @@ const handleError = (err, res) => {
 
 module.exports = {
   ErrorHandler,
-  handleError
-  /* ValidationError*/
+  handleError,
+  ValidationError
 };

@@ -1,6 +1,11 @@
 const express = require('express');
 const logger = require('./common/winston');
-const { handleError, ErrorHandler } = require('./common/error.js');
+const {
+  handleError,
+  ErrorHandler,
+  ValidationError
+} = require('./common/error.js');
+const validate = require('uuid-validate');
 const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-codes');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
@@ -22,7 +27,6 @@ app.use('/', (req, res, next) => {
   }
 
   const start = Date.now();
-
   logger.info(`
   ---------START REQUEST-----------
   Request method: ${req.method} 
@@ -46,13 +50,16 @@ app.use('/', (req, res, next) => {
   next();
 });
 
-/* app.use((req, res, next) => {
+app.use('/*/:id', (req, res, next) => {
+  if (!req.params.id || !validate(req.params.id)) {
+    throw new ValidationError();
+  }
+  next();
+});
 
+app.use('/users', userRouter);
+app.use('/boards', boardRouter);
 
-  next(err);
-});*/
-
-// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
@@ -65,10 +72,8 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res) => {
+  logger.error(getStatusText(INTERNAL_SERVER_ERROR));
   res.status(INTERNAL_SERVER_ERROR).send(getStatusText(INTERNAL_SERVER_ERROR));
 });
-
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
 
 module.exports = app;
