@@ -2,10 +2,9 @@ const { createLogger, transports, format } = require('winston');
 const path = require('path');
 
 const logger = createLogger({
-  exitOnError: true,
+  level: 'silly',
   format: format.combine(
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-    format.printf(info => `${info.timestamp} ${info.level}: ${info.message}`),
     format.json()
   ),
   transports: [
@@ -14,19 +13,16 @@ const logger = createLogger({
     }),
     new transports.File({
       level: 'info',
-      filename: path.join(__dirname, '/logs/app_info.log'),
-      format: format.combine(format.uncolorize(), format.json())
+      filename: path.join(__dirname, '/logs/app_info.log')
     }),
     new transports.File({
       level: 'error',
-      filename: path.join(__dirname, '/logs/app_error.log'),
-      format: format.combine(format.uncolorize(), format.json())
+      filename: path.join(__dirname, '/logs/app_error.log')
     })
   ],
-  exceptionTransport: [
+  exceptionHandlers: [
     new transports.File({
-      filename: path.join(__dirname, '/logs/exception.log'),
-      format: format.combine(format.uncolorize(), format.json())
+      filename: path.join(__dirname, '/logs/exception.log')
     })
   ]
 });
@@ -45,7 +41,7 @@ const loggerMiddleware = (req, res, next) => {
       url: req.url,
       queryParams: req.query,
       body: req.body,
-      ms
+      duration: `${ms}ms`
     });
   });
   next();

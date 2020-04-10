@@ -3,8 +3,7 @@ const { loggerMiddleware } = require('./common/winston');
 const {
   handleError,
   handleServerError,
-  ErrorHandler,
-  ValidationError
+  ErrorHandler
 } = require('./common/error.js');
 const validate = require('uuid-validate');
 const swaggerUI = require('swagger-ui-express');
@@ -32,7 +31,7 @@ app.use(loggerMiddleware);
 
 app.use('/*/:id', (req, res, next) => {
   if (!req.params.id || !validate(req.params.id)) {
-    throw new ValidationError();
+    throw new ErrorHandler();
   }
   next();
 });
