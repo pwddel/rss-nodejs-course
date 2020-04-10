@@ -1,16 +1,22 @@
 const router = require('express').Router({ mergeParams: true });
+const { ErrorHandler } = require('../../common/error');
 
 const tasksService = require('./task.service');
 
 router.get('/', (req, res) => {
   const tasks = tasksService.getAll(req.params.boardId);
+  if (!tasks) {
+    throw new ErrorHandler(404, 'Cannot get  list of tasks');
+  }
   res.json(tasks);
 });
 
 router.get('/:taskId', (req, res) => {
   const task = tasksService.findTask(req.params.boardId, req.params.taskId);
   /* console.log('TASK', task);*/
-  if (!task) res.status(404).send('The task not found');
+  if (!task) {
+    throw new ErrorHandler(404, 'Task not found');
+  }
   res.json(task);
 });
 

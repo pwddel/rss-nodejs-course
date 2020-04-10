@@ -1,9 +1,13 @@
 const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
+const { ErrorHandler } = require('../../common/error');
 
 router.get('/', (req, res) => {
   const users = usersService.getAll();
+  if (!users) {
+    throw new ErrorHandler(404, 'Cannot get list of users');
+  }
   res.json(users.map(User.toResponse));
 });
 
@@ -15,15 +19,14 @@ router.post('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   const user = usersService.findUser(req.params.id);
-  console.log('Route get /:id user:', user);
-  console.log('Route get /:id id:', req.params.id);
+  if (!user) {
+    throw new ErrorHandler(404, 'User cannot find');
+  }
   res.json(User.toResponse(user));
 });
 
 router.put('/:id', (req, res) => {
-  console.log('Route put updated user:', req.body);
   const updatedUser = usersService.updateUser(req.params.id, req.body);
-  /* console.log('Route put updated user:', updatedUser);*/
   res.json(User.toResponse(updatedUser));
 });
 
