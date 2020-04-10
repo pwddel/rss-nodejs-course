@@ -1,5 +1,9 @@
 const logger = require('./winston');
-const { BAD_REQUEST, getStatusText } = require('http-status-codes');
+const {
+  INTERNAL_SERVER_ERROR,
+  BAD_REQUEST,
+  getStatusText
+} = require('http-status-codes');
 
 class ValidationError extends Error {
   constructor() {
@@ -13,28 +17,32 @@ class ValidationError extends Error {
 }
 
 class ErrorHandler extends Error {
-  constructor(statusCode, message) {
+  constructor(statusCode, message, data) {
     super();
     this.statusCode = statusCode;
     this.message = message;
-    logger.error(
-      `Status code:${this.statusCode} Error message:${this.message}`
-    );
+    this.data = data;
   }
 }
 
-const handleError = (err, res) => {
-  const { statusCode, message } = err;
-
+const handleError = (req, res) => {
+  const { statusCode, message, data } = req;
+  logger.error(getStatusText(statusCode), req);
   res.status(statusCode).json({
-    status: 'error',
     statusCode,
-    message
+    message,
+    errors: data
   });
+};
+
+const handleServerError = (req, res) => {
+  logger.error(getStatusText(INTERNAL_SERVER_ERROR), req);
+  res.status(INTERNAL_SERVER_ERROR).send(getStatusText(INTERNAL_SERVER_ERROR));
 };
 
 module.exports = {
   ErrorHandler,
   handleError,
+  handleServerError,
   ValidationError
 };

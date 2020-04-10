@@ -1,12 +1,12 @@
 const express = require('express');
-const logger = require('./common/winston');
+const { loggerMiddleware } = require('./common/winston');
 const {
   handleError,
+  handleServerError,
   ErrorHandler,
   ValidationError
 } = require('./common/error.js');
 const validate = require('uuid-validate');
-const { INTERNAL_SERVER_ERROR, getStatusText } = require('http-status-codes');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
@@ -25,30 +25,10 @@ app.use('/', (req, res, next) => {
     res.send('Service is running!');
     return;
   }
-
-  const start = Date.now();
-  logger.info(`
-  ---------START REQUEST-----------
-  Request method: ${req.method} 
-  Request original URL: ${req.originalUrl}
-  Request query:${req.query}  
-  Request parameters: ${req.params}  
-  Request body: ${req.body}`);
-
-  res.on('finish', () => {
-    const ms = Date.now() - start;
-    logger.info(`
-    ---------END REQUEST-----------
-    Request method: ${req.method} 
-    Request original URL: ${req.originalUrl}
-    Request query:${req.query}  
-    Request parameters: ${req.params} 
-    Response status code: ${res.statusCode}  
-    Response body: ${req.body}
-    ms: ${ms}`);
-  });
   next();
 });
+
+app.use(loggerMiddleware);
 
 app.use('/*/:id', (req, res, next) => {
   if (!req.params.id || !validate(req.params.id)) {
@@ -72,8 +52,7 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res) => {
-  logger.error(getStatusText(INTERNAL_SERVER_ERROR));
-  res.status(INTERNAL_SERVER_ERROR).send(getStatusText(INTERNAL_SERVER_ERROR));
+  handleServerError(res);
 });
 
 module.exports = app;
