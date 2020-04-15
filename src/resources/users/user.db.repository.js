@@ -18,7 +18,7 @@ const updateData = async (id, newData) => {
 };
 
 const deleteData = async id => {
-  return User.deleteOne({ _id: id }).deletedCount;
+  return User.deleteOne({ _id: id });
 };
 
 module.exports = {

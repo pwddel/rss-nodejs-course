@@ -20,19 +20,14 @@ const validate = (schema, property) => {
 };
 
 const schemas = {
-  usersPOST: Joi.object().keys({
-    name: Joi.string().required(),
-    login: Joi.string().required(),
-    password: Joi.number()
-  }),
-  usersLIST: {
-    id: Joi.string()
-      .guid()
-      .required(),
-    name: Joi.number().required(),
-    login: Joi.string().required()
-  },
-  userDETAIL: {
+  userBODY: Joi.object()
+    .options({ abortEarly: false, allowUnknown: true })
+    .keys({
+      name: Joi.string().required(),
+      login: Joi.string().required(),
+      password: Joi.string().required()
+    }),
+  ID: {
     id: Joi.string().guid()
   }
 };

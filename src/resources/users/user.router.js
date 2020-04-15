@@ -12,12 +12,12 @@ router.get('/', async (req, res) => {
   res.json(users.map(User.toResponse));
 });
 
-router.post('/', async (req, res) => {
+router.post('/', validate(schemas.userBODY, 'body'), async (req, res) => {
   const newUser = await usersService.create(req.body);
   res.json(User.toResponse(newUser));
 });
 
-router.get('/:id', validate(schemas.userDETAIL, 'params'), async (req, res) => {
+router.get('/:id', validate(schemas.ID, 'params'), async (req, res) => {
   const user = await usersService.findUser(req.params.id);
   if (!user) {
     throw new ErrorHandler(404, 'User cannot find');
@@ -25,12 +25,17 @@ router.get('/:id', validate(schemas.userDETAIL, 'params'), async (req, res) => {
   res.json(User.toResponse(user));
 });
 
-router.put('/:id', async (req, res) => {
-  const updatedUser = await usersService.updateUser(req.params.id, req.body);
-  res.json(User.toResponse(updatedUser));
-});
+router.put(
+  '/:id',
+  /*  validate(schemas.ID, 'params'),
+  validate(schemas.userBODY, 'body'),*/
+  async (req, res) => {
+    const updatedUser = await usersService.updateUser(req.params.id, req.body);
+    res.json(User.toResponse(updatedUser));
+  }
+);
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', validate(schemas.ID, 'params'), async (req, res) => {
   await usersService.deleteUser(req.params.id);
   res.status(204).end();
 });
