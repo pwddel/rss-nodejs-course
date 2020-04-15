@@ -1,3 +1,4 @@
+const { connectToDB } = require('./db/db.js');
 const { PORT } = require('./common/config');
 const { logger } = require('./common/winston');
 const app = require('./app');
@@ -10,6 +11,8 @@ process
     logger.info(`Uncaught Exception: ${err.message}`, err);
   });
 
-app.listen(PORT, () =>
-  console.log(`App is running on http://localhost:${PORT}`)
-);
+connectToDB(() => {
+  app.listen(PORT, () =>
+    console.log(`App is running on http://localhost:${PORT}`)
+  );
+});

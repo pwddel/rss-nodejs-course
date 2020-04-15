@@ -1,11 +1,14 @@
 const tasksRepo = require('../tasks/task.memory.repository');
+const User = require('./user.model');
 
 let db = [];
 
 const getAll = () => db;
 
 const addData = data => {
-  db.push(data);
+  const newData = new User(data);
+  db.push(newData);
+  return newData;
   /* console.log('DB:', db);*/
 };
 

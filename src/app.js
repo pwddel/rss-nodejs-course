@@ -1,11 +1,11 @@
 const express = require('express');
+
 const { loggerMiddleware } = require('./common/winston');
 const {
   handleError,
   handleServerError,
   ErrorHandler
 } = require('./common/error.js');
-const validate = require('uuid-validate');
 const swaggerUI = require('swagger-ui-express');
 const path = require('path');
 const YAML = require('yamljs');
@@ -29,20 +29,13 @@ app.use('/', (req, res, next) => {
 
 app.use(loggerMiddleware);
 
-app.use('/*/:id', (req, res, next) => {
-  if (!req.params.id || !validate(req.params.id)) {
-    throw new ErrorHandler();
-  }
-  next();
-});
-
 app.use('/users', userRouter);
 app.use('/boards', boardRouter);
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  console.log(err);
   if (err instanceof ErrorHandler) {
     handleError(err, res);
     return;
