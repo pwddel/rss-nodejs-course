@@ -2,6 +2,7 @@ const router = require('express').Router();
 const User = require('./user.model');
 const usersService = require('./user.service');
 const { ErrorHandler } = require('../../common/error');
+const { validate, schemas } = require('../../common/validate');
 
 router.get('/', async (req, res) => {
   const users = await usersService.getAll();
@@ -16,7 +17,7 @@ router.post('/', async (req, res) => {
   res.json(User.toResponse(newUser));
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', validate(schemas.userDETAIL, 'params'), async (req, res) => {
   const user = await usersService.findUser(req.params.id);
   if (!user) {
     throw new ErrorHandler(404, 'User cannot find');
