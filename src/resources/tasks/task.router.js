@@ -33,15 +33,9 @@ router.get(
 router.post(
   '/',
   errorCatcher(async (req, res) => {
-    const boardId = req.params.boardId;
-    const { title, order, description, userId, columnId } = req.body;
     const newTask = await tasksService.create({
-      title,
-      order,
-      description,
-      userId,
-      boardId,
-      columnId
+      ...req.body,
+      boardId: req.params.boardId
     });
     res.json(Task.toResponse(newTask));
   })
