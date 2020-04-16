@@ -10,7 +10,7 @@ const boardSchema = new mongoose.Schema({
   columns: [
     {
       title: String,
-      order: String,
+      order: Number,
       _id: {
         type: String,
         default: uuid
@@ -18,6 +18,12 @@ const boardSchema = new mongoose.Schema({
     }
   ]
 });
+
+boardSchema.statics.toResponse = board => {
+  if (!board) return {};
+  const { id, title, columns } = board;
+  return { id, title, columns };
+};
 
 const Board = mongoose.model('Board', boardSchema);
 /* class Column {
