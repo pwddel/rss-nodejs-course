@@ -1,6 +1,7 @@
 const Board = require('./board.model');
+const tasksRepo = require('../tasks/task.db.repository');
 
-const getAll = async () => {
+const findAll = async () => {
   return Board.find({});
 };
 
@@ -17,11 +18,12 @@ const updateData = async (id, newData) => {
 };
 
 const deleteData = async id => {
+  await tasksRepo.deleteData(id);
   return Board.deleteOne({ _id: id });
 };
 
 module.exports = {
-  getAll,
+  findAll,
   addData,
   findData,
   updateData,

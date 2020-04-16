@@ -1,6 +1,6 @@
 const usersRepo = require('./user.db.repository');
 
-const getAll = () => usersRepo.getAll();
+const getAll = () => usersRepo.findAll();
 
 const create = data => usersRepo.addData(data);
 

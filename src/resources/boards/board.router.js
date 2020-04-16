@@ -12,9 +12,9 @@ router.get(
   errorCatcher(async (req, res) => {
     const boards = await boardsService.getAll();
     if (!boards) {
-      throw new ErrorHandler(404, 'Cannot get  list of boards');
+      throw new ErrorHandler(404, 'Cannot get list of users');
     }
-    res.json(boards);
+    res.json(boards.map(Board.toResponse));
   })
 );
 
@@ -29,10 +29,6 @@ router.post(
 router.get(
   '/:id',
   errorCatcher(async (req, res) => {
-    console.log(
-      '--------------------------------------------------ID',
-      req.params
-    );
     const board = await boardsService.findBoard(req.params.id);
     if (!board) {
       throw new ErrorHandler(404, 'Board not found');

@@ -2,31 +2,34 @@ const uuid = require('uuid');
 const mongoose = require('mongoose');
 
 const taskSchema = new mongoose.Schema({
-  title: String,
-  order: Number,
-  description: String,
   _id: {
     type: String,
     default: uuid
   },
-  _userId: {
+  title: {
     type: String,
-    default: uuid
+    default: 'title'
   },
-  _boardId: {
-    type: String,
-    default: uuid
+  order: {
+    type: Number,
+    default: 0
   },
-  _columnId: {
+  description: String,
+  userId: {
     type: String,
-    default: uuid
+    default: ''
+  },
+  boardId: String,
+  columnId: {
+    type: String,
+    default: ''
   }
 });
 
 taskSchema.statics.toResponse = task => {
   if (!task) return {};
-  const { id, title, order, description, userId } = task;
-  return { id, title, order, description, userId };
+  const { id, title, order, description, userId, boardId, columnId } = task;
+  return { id, title, order, description, userId, boardId, columnId };
 };
 
 const Task = mongoose.model('Task', taskSchema);

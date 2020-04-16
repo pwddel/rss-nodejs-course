@@ -1,6 +1,6 @@
 const boardsRepo = require('./board.db.repository');
 
-const getAll = () => boardsRepo.getAll();
+const getAll = () => boardsRepo.findAll();
 
 const create = data => boardsRepo.addData(data);
 

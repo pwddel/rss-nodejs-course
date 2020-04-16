@@ -2,6 +2,7 @@ const router = require('express').Router({ mergeParams: true });
 const errorCatcher = require('../../common/errorCatcher');
 const { ErrorHandler } = require('../../common/error');
 const tasksService = require('./task.service');
+const Task = require('../tasks/task.model');
 
 router.get(
   '/',
@@ -10,7 +11,7 @@ router.get(
     if (!tasks) {
       throw new ErrorHandler(404, 'Cannot get  list of tasks');
     }
-    res.json(tasks);
+    res.json(tasks.map(Task.toResponse));
   })
 );
 
@@ -25,15 +26,24 @@ router.get(
     if (!task) {
       throw new ErrorHandler(404, 'Task not found');
     }
-    res.json(task);
+    res.json(Task.toResponse(task));
   })
 );
 
 router.post(
   '/',
   errorCatcher(async (req, res) => {
-    const newTask = await tasksService.create(req.params.boardId, req.body);
-    res.json(newTask);
+    const boardId = req.params.boardId;
+    const { title, order, description, userId, columnId } = req.body;
+    const newTask = await tasksService.create({
+      title,
+      order,
+      description,
+      userId,
+      boardId,
+      columnId
+    });
+    res.json(Task.toResponse(newTask));
   })
 );
 
@@ -46,7 +56,7 @@ router.put(
       req.body
     );
     if (!updatedTask) res.status(404).send('The task not found');
-    res.json(updatedTask);
+    res.json(Task.toResponse(updatedTask));
   })
 );
 

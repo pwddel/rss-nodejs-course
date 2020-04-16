@@ -1,13 +1,11 @@
 const Task = require('./task.model');
-/* const tasksRepo = require('../tasks/task.memory.repository');*/
 
-const getAll = async () => {
-  return Task.find({});
+const findAll = async boardId => {
+  return Task.find({ boardId });
 };
 
-const addData = async (boardId, data) => {
-  const newTask = { ...data, boardId };
-  return Task.create(newTask);
+const addData = async task => {
+  return Task.create(task);
 };
 
 const findData = async (boardId, taskId) => {
@@ -15,17 +13,26 @@ const findData = async (boardId, taskId) => {
 };
 
 const updateData = async (boardId, taskId, newData) => {
-  return Task.updateOne({ _boardId: boardId, _id: taskId }, newData);
+  return Task.findOneAndUpdate({ boardId, _id: taskId }, newData);
 };
 
 const deleteData = async (boardId, taskId) => {
-  return Task.deleteOne({ _boardId: boardId, _id: taskId });
+  if (!taskId) {
+    await Task.deleteMany({ boardId });
+  } else {
+    await Task.findOneAndDelete({ _id: taskId, boardId });
+  }
+};
+
+const unassigneUser = async userId => {
+  return Task.updateMany({ userId }, { userId: null });
 };
 
 module.exports = {
-  getAll,
+  findAll,
   addData,
   updateData,
   findData,
-  deleteData
+  deleteData,
+  unassigneUser
 };

@@ -1,8 +1,8 @@
 const tasksRepo = require('./task.db.repository');
 
-const getAll = boardId => tasksRepo.getAll(boardId);
+const getAll = boardId => tasksRepo.findAll(boardId);
 
-const create = (boardId, taskId) => tasksRepo.addData(boardId, taskId);
+const create = task => tasksRepo.addData(task);
 
 const findTask = (boardId, taskId) => tasksRepo.findData(boardId, taskId);
 

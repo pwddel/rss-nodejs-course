@@ -6,7 +6,8 @@ const getAll = id => {
 };
 
 const addData = (boardId, task) => {
-  const newTask = new Task({ ...task, boardId });
+  const newTask = new Task({ boardId, ...task });
+  console.log('---------------------------------------', newTask);
   db.push(newTask);
   return newTask;
 };
@@ -36,7 +37,7 @@ const deleteData = (boardId, taskId) => {
   db = [...filtred];
 };
 
-const unassignUser = userId => {
+const unassigneUser = userId => {
   const unassigned = db.map(task => {
     if (task.userId === userId) {
       task.userId = null;
@@ -57,7 +58,7 @@ module.exports = {
   addData,
   updateData,
   deleteData,
-  unassignUser,
+  unassigneUser,
   findData,
   db
 };
