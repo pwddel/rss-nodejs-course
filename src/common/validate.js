@@ -10,6 +10,7 @@ const validate = (schema, property) => {
       // eslint-disable-next-line callback-return
       next();
     } else {
+      console.log(error.toString());
       const { details } = error;
       const message = details.map(i => i.message).join(',');
 
@@ -20,14 +21,25 @@ const validate = (schema, property) => {
 };
 
 const schemas = {
-  userBODY: Joi.object()
-    .options({ abortEarly: false, allowUnknown: true })
+  user: Joi.object()
     .keys({
       name: Joi.string().required(),
       login: Joi.string().required(),
       password: Joi.string().required()
-    }),
-  ID: {
+    })
+    .options({ abortEarly: false, allowUnknown: true }),
+  board: Joi.object().keys({
+    title: Joi.string().required(),
+    columns: Joi.array()
+      .items(
+        Joi.object().keys({
+          title: Joi.string().required(),
+          order: Joi.number().required()
+        })
+      )
+      .required()
+  }),
+  id: {
     id: Joi.string().guid()
   }
 };

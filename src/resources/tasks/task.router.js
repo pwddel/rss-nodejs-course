@@ -3,9 +3,11 @@ const errorCatcher = require('../../common/errorCatcher');
 const { ErrorHandler } = require('../../common/error');
 const tasksService = require('./task.service');
 const Task = require('../tasks/task.model');
+const { validate, schemas } = require('../../common/validate');
 
 router.get(
   '/',
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     const tasks = await tasksService.getAll(req.params.boardId);
     if (!tasks) {
@@ -17,6 +19,7 @@ router.get(
 
 router.get(
   '/:taskId',
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     const task = await tasksService.findTask(
       req.params.boardId,
@@ -56,6 +59,7 @@ router.put(
 
 router.delete(
   '/:taskId',
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     await tasksService.deleteTask(req.params.boardId, req.params.taskId);
     res.status(204).end();

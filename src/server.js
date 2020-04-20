@@ -11,8 +11,6 @@ process
     logger.info(`Uncaught Exception: ${err.message}`, err);
   });
 
-Promise.reject(Error('Oops!'));
-
 connectToDB(() => {
   app.listen(PORT, () =>
     console.log(`App is running on http://localhost:${PORT}`)

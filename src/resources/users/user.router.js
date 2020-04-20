@@ -18,7 +18,6 @@ router.get(
 
 router.post(
   '/',
-  validate(schemas.userBODY, 'body'),
   errorCatcher(async (req, res) => {
     const newUser = await usersService.create(req.body);
     res.json(User.toResponse(newUser));
@@ -27,7 +26,7 @@ router.post(
 
 router.get(
   '/:id',
-  validate(schemas.ID, 'params'),
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     const user = await usersService.findUser(req.params.id);
     if (!user) {
@@ -39,8 +38,7 @@ router.get(
 
 router.put(
   '/:id',
-  /*  validate(schemas.ID, 'params'),
-  validate(schemas.userBODY, 'body'),*/
+  validate(schemas.user, 'body'),
   errorCatcher(async (req, res) => {
     const updatedUser = await usersService.updateUser(req.params.id, req.body);
     res.json(User.toResponse(updatedUser));
@@ -49,7 +47,7 @@ router.put(
 
 router.delete(
   '/:id',
-  validate(schemas.ID, 'params'),
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     await usersService.deleteUser(req.params.id);
     res.status(204).end();

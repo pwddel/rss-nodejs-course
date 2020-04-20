@@ -4,11 +4,13 @@ const { ErrorHandler } = require('../../common/error');
 const boardsService = require('./board.service');
 const Board = require('./board.model');
 const tasksRouter = require('../../resources/tasks/task.router.js');
+const { validate, schemas } = require('../../common/validate');
 
 router.use('/:boardId/tasks', tasksRouter);
 
 router.get(
   '/',
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     const boards = await boardsService.getAll();
     if (!boards) {
@@ -20,6 +22,7 @@ router.get(
 
 router.post(
   '/',
+  validate(schemas.board, 'body'),
   errorCatcher(async (req, res) => {
     const newBoard = await boardsService.create(req.body);
     res.json(Board.toResponse(newBoard));
@@ -28,6 +31,7 @@ router.post(
 
 router.get(
   '/:id',
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     const board = await boardsService.findBoard(req.params.id);
     if (!board) {
@@ -50,6 +54,7 @@ router.put(
 
 router.delete(
   '/:id',
+  validate(schemas.id, 'params'),
   errorCatcher(async (req, res) => {
     await boardsService.deleteBoard(req.params.id);
     res.status(204).end();
