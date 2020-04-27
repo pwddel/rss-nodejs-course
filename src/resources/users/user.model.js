@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const uuid = require('uuid');
 const mongoose = require('mongoose');
 
@@ -10,6 +11,20 @@ const userSchema = new mongoose.Schema({
     default: uuid
   }
 });
+
+userSchema.pre('save', async function(next) {
+  if (this.isModified('password')) {
+    this.password = await bcrypt.hash(this.password, 12);
+  }
+  next();
+});
+
+userSchema.methods.correctPassword = async function(
+  candidatePassword,
+  userPassword
+) {
+  return await bcrypt.compare(candidatePassword, userPassword);
+};
 
 userSchema.statics.toResponse = user => {
   if (!user) return {};

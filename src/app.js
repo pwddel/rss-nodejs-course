@@ -11,6 +11,8 @@ const path = require('path');
 const YAML = require('yamljs');
 const userRouter = require('./resources/users/user.router');
 const boardRouter = require('./resources/boards/board.router.js');
+const authRouter = require('./resources/auth/auth.router.js');
+const authController = require('./resources/auth/auth.controller');
 
 const app = express();
 const swaggerDocument = YAML.load(path.join(__dirname, '../doc/api.yaml'));
@@ -29,8 +31,9 @@ app.use('/', (req, res, next) => {
 
 app.use(loggerMiddleware);
 
-app.use('/users', userRouter);
-app.use('/boards', boardRouter);
+app.use('/login', authRouter);
+app.use('/users', authController.protect, userRouter);
+app.use('/boards', authController.protect, boardRouter);
 
 app.use((err, req, res, next) => {
   res.locals.message = err.message;

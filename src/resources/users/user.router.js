@@ -19,7 +19,11 @@ router.get(
 router.post(
   '/',
   errorCatcher(async (req, res) => {
-    const newUser = await usersService.create(req.body);
+    const newUser = await usersService.create({
+      name: req.body.name,
+      login: req.body.login,
+      password: req.body.password
+    });
     res.json(User.toResponse(newUser));
   })
 );
